@@ -291,11 +291,25 @@ class Driver {
         err.message += ` Method: ${method}`;
         reject(err);
       }), timeout);
+
+      const status = {
+        msg: `Devtools Protocol Command ${method}`,
+        id: `lh:driver:sendCommand:${method}`,
+      };
+      if (log.isVerbose()) {
+        log.time(status, 'verbose');
+      }
       try {
         const result = await this._connection.sendCommand(method, ...params);
+        if (log.isVerbose()) {
+          log.timeEnd(status);
+        }
         clearTimeout(asyncTimeout);
         resolve(result);
       } catch (err) {
+        if (log.isVerbose()) {
+          log.timeEnd(status);
+        }
         clearTimeout(asyncTimeout);
         reject(err);
       }
