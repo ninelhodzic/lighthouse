@@ -300,18 +300,14 @@ class Driver {
         log.time(status, 'verbose');
       }
       try {
-        const result = await this._connection.sendCommand(method, ...params);
-        if (log.isVerbose()) {
-          log.timeEnd(status);
-        }
-        clearTimeout(asyncTimeout);
-        resolve(result);
+        resolve(await this._connection.sendCommand(method, ...params));
       } catch (err) {
+        reject(err);
+      } finally {
         if (log.isVerbose()) {
           log.timeEnd(status);
         }
         clearTimeout(asyncTimeout);
-        reject(err);
       }
     });
   }
