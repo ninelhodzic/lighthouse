@@ -33,10 +33,10 @@ install:
   # with the latest puppeteer api so we probably need to run on chromimum
   # @see https://github.com/GoogleChrome/lighthouse/pull/4640/files#r171425004
   - export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install googlechrome; fi
   - yarn
   # travis can't handle the parallel install (without caches)
   - yarn run install-all:task:windows
-  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install googlechrome; fi
 before_script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export DISPLAY=:99.0; fi
   # see comment above about puppeteer
