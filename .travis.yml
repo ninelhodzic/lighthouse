@@ -36,6 +36,7 @@ install:
   - yarn
   # travis can't handle the parallel install (without caches)
   - yarn run install-all:task:windows
+  - if [[ "$TRAVIS_OS_NAME" == "windows" ]]; then choco install googlechrome; fi
 before_script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then export DISPLAY=:99.0; fi
   # see comment above about puppeteer
@@ -43,7 +44,7 @@ before_script:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sh -e /etc/init.d/xvfb start; fi
   - yarn build-all
 script:
-  - yarn bundlesize
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then yarn bundlesize; fi
   - yarn diff:sample-json
   - yarn lint
   - yarn unit:silentcoverage
