@@ -11,6 +11,7 @@ const sendCommandMockResponses = new Map();
 const Driver = require('../../gather/driver.js');
 const Connection = require('../../gather/connections/connection.js');
 const Element = require('../../lib/element.js');
+const i18n = require('../../lib/i18n/i18n');
 const assert = require('assert');
 const EventEmitter = require('events').EventEmitter;
 const {protocolGetVersionResponse} = require('./fake-driver');
@@ -165,7 +166,9 @@ describe('Browser Driver', () => {
     return driverStub.getRequestContent('', MAX_WAIT_FOR_PROTOCOL).then(_ => {
       assert.ok(false, 'long-running getRequestContent supposed to reject');
     }, e => {
+      i18n.replaceIcuMessageInstanceIds(e, 'en-US');
       assert.equal(e.code, 'PROTOCOL_TIMEOUT');
+      assert.ok(/^Waiting for DevTools.*Method: .+/.test(e.friendlyMessage));
     });
   });
 
