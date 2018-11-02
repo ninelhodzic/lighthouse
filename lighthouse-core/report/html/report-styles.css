@@ -310,6 +310,11 @@
   background-color: #F8F9FA;
 }
 
+/* Hide the expandable arrow icon, cross-browser */
+.lh-audit-group > summary,
+.lh-expandable-details > summary {
+  list-style-type: none;
+}
 .lh-audit-group > summary::-webkit-details-marker,
 .lh-expandable-details > summary::-webkit-details-marker {
   display: none;
@@ -358,7 +363,7 @@
 .lh-metric__innerwrap {
   display: flex;
   justify-content: space-between;
-  padding: 11px var(--text-indent);
+  padding: 8px var(--text-indent);
 }
 
 .lh-metric__details {
@@ -506,7 +511,7 @@
 .lh-filmstrip-container {
   padding: 0 var(--expandable-indent);
   /* smaller gap between metrics and filmstrip */
-  margin: -16px auto 0 auto;
+  margin: -8px auto 0 auto;
 }
 
 .lh-filmstrip {
