@@ -151,10 +151,10 @@ class GatherRunner {
       errorDef = LHError.errors.NO_DOCUMENT_REQUEST;
     } else if (mainRecord.failed) {
       errorDef = {...LHError.errors.FAILED_DOCUMENT_REQUEST};
-      errorDef.substitute = ` ${mainRecord.localizedFailDescription}`;
+      errorDef.substitute = `${mainRecord.localizedFailDescription}.`;
     } else if (mainRecord.hasErrorStatusCode()) {
       errorDef = {...LHError.errors.ERRORED_DOCUMENT_REQUEST};
-      errorDef.substitute = `${mainRecord.statusCode}`;
+      errorDef.substitute = `${mainRecord.statusCode}.`;
     }
 
     if (errorDef) {
