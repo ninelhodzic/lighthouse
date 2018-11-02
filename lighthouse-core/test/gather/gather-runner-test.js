@@ -13,6 +13,7 @@ const assert = require('assert');
 const Config = require('../../config/config');
 const unresolvedPerfLog = require('./../fixtures/unresolved-perflog.json');
 const NetworkRequest = require('../../lib/network-request.js');
+const i18n = require('../../lib/i18n/i18n');
 
 class TestGatherer extends Gatherer {
   constructor() {
@@ -652,7 +653,8 @@ describe('GatherRunner', function() {
       const error = GatherRunner.getPageLoadError(url, [mainRecord]);
       assert.equal(error.message, 'FAILED_DOCUMENT_REQUEST');
       assert.equal(error.code, 'FAILED_DOCUMENT_REQUEST');
-      assert.ok(/^Lighthouse was unable to reliably load/.test(error.friendlyMessage));
+      i18n.replaceIcuMessageInstanceIds(error, 'en-US');
+      assert.ok(/^Lighthouse was unable to reliably load.*foobar/.test(error.friendlyMessage));
     });
 
     it('fails when page times out', () => {
@@ -661,6 +663,7 @@ describe('GatherRunner', function() {
       const error = GatherRunner.getPageLoadError(url, records);
       assert.equal(error.message, 'NO_DOCUMENT_REQUEST');
       assert.equal(error.code, 'NO_DOCUMENT_REQUEST');
+      i18n.replaceIcuMessageInstanceIds(error, 'en-US');
       assert.ok(/^Lighthouse was unable to reliably load/.test(error.friendlyMessage));
     });
 
@@ -672,7 +675,8 @@ describe('GatherRunner', function() {
       const error = GatherRunner.getPageLoadError(url, [mainRecord]);
       assert.equal(error.message, 'ERRORED_DOCUMENT_REQUEST');
       assert.equal(error.code, 'ERRORED_DOCUMENT_REQUEST');
-      assert.ok(/^Lighthouse was unable to reliably load/.test(error.friendlyMessage));
+      i18n.replaceIcuMessageInstanceIds(error, 'en-US');
+      assert.ok(/^Lighthouse was unable to reliably load.*404/.test(error.friendlyMessage));
     });
 
     it('fails when page returns with a 500', () => {
@@ -683,7 +687,8 @@ describe('GatherRunner', function() {
       const error = GatherRunner.getPageLoadError(url, [mainRecord]);
       assert.equal(error.message, 'ERRORED_DOCUMENT_REQUEST');
       assert.equal(error.code, 'ERRORED_DOCUMENT_REQUEST');
-      assert.ok(/^Lighthouse was unable to reliably load/.test(error.friendlyMessage));
+      i18n.replaceIcuMessageInstanceIds(error, 'en-US');
+      assert.ok(/^Lighthouse was unable to reliably load.*500/.test(error.friendlyMessage));
     });
   });
 
@@ -719,6 +724,7 @@ describe('GatherRunner', function() {
       } catch (err) {
         assert.equal(err.message, 'INSECURE_DOCUMENT_REQUEST');
         assert.equal(err.code, 'INSECURE_DOCUMENT_REQUEST');
+        i18n.replaceIcuMessageInstanceIds(err, 'en-US');
         /* eslint-disable-next-line max-len */
         assert.equal(err.friendlyMessage, 'The URL you have provided does not have valid security credentials. reason 1. reason 2.');
       }
@@ -1065,6 +1071,7 @@ describe('GatherRunner', function() {
         config: new Config({}),
       }).then(artifacts => {
         assert.equal(artifacts.LighthouseRunWarnings.length, 1);
+        i18n.replaceIcuMessageInstanceIds(artifacts.LighthouseRunWarnings, 'en-US');
         assert.ok(/unable.*load the page/.test(artifacts.LighthouseRunWarnings[0]));
       });
     });

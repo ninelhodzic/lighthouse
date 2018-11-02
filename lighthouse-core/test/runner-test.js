@@ -606,6 +606,7 @@ describe('Runner', () => {
     assert.ok(lhr.audits['test-audit'].errorMessage.includes(NO_FCP.code));
     // And it bubbled up to the runtimeError.
     assert.strictEqual(lhr.runtimeError.code, NO_FCP.code);
+    console.log(NO_FCP.message)
     assert.ok(lhr.runtimeError.message.includes(NO_FCP.message));
   });
 

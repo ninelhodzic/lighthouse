@@ -157,10 +157,10 @@ class GatherRunner {
       errorDef = LHError.errors.NO_DOCUMENT_REQUEST;
     } else if (mainRecord.failed) {
       errorDef = {...LHError.errors.FAILED_DOCUMENT_REQUEST};
-      errorDef.message += ` ${mainRecord.localizedFailDescription}.`;
+      errorDef.substitute = ` ${mainRecord.localizedFailDescription}`;
     } else if (mainRecord.hasErrorStatusCode()) {
       errorDef = {...LHError.errors.ERRORED_DOCUMENT_REQUEST};
-      errorDef.message += ` Status code: ${mainRecord.statusCode}.`;
+      errorDef.substitute = `${mainRecord.statusCode}`;
     }
 
     if (errorDef) {
@@ -179,7 +179,7 @@ class GatherRunner {
       const insecureDescriptions = explanations
         .filter(exp => exp.securityState === 'insecure')
         .map(exp => exp.description);
-      errorDef.message += ` ${insecureDescriptions.join(' ')}`;
+      errorDef.substitute = `${insecureDescriptions.join(' ')}`;
       throw new LHError(errorDef);
     }
   }
