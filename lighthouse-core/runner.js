@@ -158,7 +158,7 @@ class Runner {
       return {lhr, artifacts, report};
     } catch (err) {
       // i18n error strings
-      i18n.replaceIcuMessageInstanceIds(err, settings.locale);
+      i18n.getFormatted(err.message, settings.locale);
       await Sentry.captureException(err, {level: 'fatal'});
       throw err;
     }

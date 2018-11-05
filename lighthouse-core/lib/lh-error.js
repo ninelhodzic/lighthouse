@@ -18,11 +18,11 @@ const UIStrings = {
   /** Error message explaining that Lighthouse could not load the requested URL and the steps that might be taken to fix the unreliability. */
   pageLoadFailed: 'Lighthouse was unable to reliably load the page you requested. Make sure you are testing the correct URL and that the server is properly responding to all requests.',
   /** Error message explaining that Lighthouse could not load the requested URL and the steps that might be taken to fix the unreliability. */
-  pageLoadFailedWithStatusCode: 'Lighthouse was unable to reliably load the page you requested. Make sure you are testing the correct URL and that the server is properly responding to all requests.  Status Code: {substitute}',
+  pageLoadFailedWithStatusCode: 'Lighthouse was unable to reliably load the page you requested. Make sure you are testing the correct URL and that the server is properly responding to all requests.  Status Code: {statusCode}',
   /** Error message explaining that Lighthouse could not load the requested URL and the steps that might be taken to fix the unreliability. */
-  pageLoadFailedWithDetails: 'Lighthouse was unable to reliably load the page you requested. Make sure you are testing the correct URL and that the server is properly responding to all requests. Detailed Error: {substitute}',
+  pageLoadFailedWithDetails: 'Lighthouse was unable to reliably load the page you requested. Make sure you are testing the correct URL and that the server is properly responding to all requests. Detailed Error: {errorDetails}',
   /** Error message explaining that the credentials included in the Lighthouse run were invalid, so the URL cannot be accessed. */
-  pageLoadFailedInsecure: 'The URL you have provided does not have valid security credentials. {substitute}',
+  pageLoadFailedInsecure: 'The URL you have provided does not have valid security credentials. {securityMessages}',
   /** Error message explaining that Chrome has encountered an error during the Lighthouse run, and that Chrome should be restarted. */
   internalChromeError: 'An internal Chrome error occurred. Please restart Chrome and try re-running Lighthouse.',
   /** Error message explaining that fetching the resources of the webpage has taken longer than the maximum time. */
@@ -30,18 +30,24 @@ const UIStrings = {
   /** Error message explaining that the provided URL Lighthouse points to is not valid, and cannot be loaded. */
   urlInvalid: 'The URL you have provided appears to be invalid.',
   /** Error message explaining that the Chrome Devtools protocol has exceeded the maximum timeout allowed. */
-  protocolTimeout: 'Waiting for DevTools protocol response has exceeded the allotted time. Method: {substitute}',
+  protocolTimeout: 'Waiting for DevTools protocol response has exceeded the allotted time. Method: {protocolMethod}',
 };
 
 const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
+
 
 /**
  * @typedef LighthouseErrorDefinition
  * @property {string} code
  * @property {string} message
- * @property {string} [substitute]
  * @property {RegExp} [pattern]
  * @property {boolean} [lhrRuntimeError] True if it should appear in the top-level LHR.runtimeError property.
+ * ICU argument replacement properties
+ * @property {string} [statusCode]
+ * @property {string} [errorDetails]
+ * @property {string} [securityMessages]
+ * @property {string} [protocolMethod]
+ *
  */
 
 class LighthouseError extends Error {
@@ -53,9 +59,7 @@ class LighthouseError extends Error {
     super(errorDefinition.code);
     this.name = 'LHError';
     this.code = errorDefinition.code;
-    this.friendlyMessage = (errorDefinition.substitute) ?
-      str_(errorDefinition.message, {'substitute': errorDefinition.substitute}) :
-      str_(errorDefinition.message);
+    this.friendlyMessage = str_(errorDefinition.message, errorDefinition);
     this.lhrRuntimeError = !!errorDefinition.lhrRuntimeError;
     if (properties) Object.assign(this, properties);
 
@@ -166,21 +170,21 @@ const ERRORS = {
     code: 'FAILED_DOCUMENT_REQUEST',
     message: UIStrings.pageLoadFailedWithDetails,
     lhrRuntimeError: true,
-    substitute: 'No Failure Description Loaded.',
+    errorDetails: 'No Failure Description Loaded.',
   },
   /* Used when status code is 4xx or 5xx. */
   ERRORED_DOCUMENT_REQUEST: {
     code: 'ERRORED_DOCUMENT_REQUEST',
     message: UIStrings.pageLoadFailedWithStatusCode,
     lhrRuntimeError: true,
-    substitute: 'No Error Code Loaded.',
+    statusCode: 'No Error Code Loaded.',
   },
   /* Used when security error prevents page load. */
   INSECURE_DOCUMENT_REQUEST: {
     code: 'INSECURE_DOCUMENT_REQUEST',
     message: UIStrings.pageLoadFailedInsecure,
     lhrRuntimeError: true,
-    substitute: 'No Security Descriptions Loaded.',
+    securityMessages: 'No Security Descriptions Loaded.',
   },
 
   // Protocol internal failures
@@ -214,7 +218,7 @@ const ERRORS = {
     code: 'PROTOCOL_TIMEOUT',
     message: UIStrings.protocolTimeout,
     lhrRuntimeError: true,
-    substitute: 'No Method Loaded.',
+    protocolMethod: 'No Method Loaded.',
   },
 
   // Hey! When adding a new error type, update lighthouse-result.proto too.

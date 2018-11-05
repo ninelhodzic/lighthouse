@@ -452,15 +452,15 @@
     "description": "Error message explaining that Lighthouse could not load the requested URL and the steps that might be taken to fix the unreliability."
   },
   "lighthouse-core/lib/lh-error.js | pageLoadFailedInsecure": {
-    "message": "The URL you have provided does not have valid security credentials. {substitute}",
+    "message": "The URL you have provided does not have valid security credentials. {securityMessages}",
     "description": "Error message explaining that the credentials included in the Lighthouse run were invalid, so the URL cannot be accessed."
   },
   "lighthouse-core/lib/lh-error.js | pageLoadFailedWithDetails": {
-    "message": "Lighthouse was unable to reliably load the page you requested. Make sure you are testing the correct URL and that the server is properly responding to all requests. Detailed Error: {substitute}",
+    "message": "Lighthouse was unable to reliably load the page you requested. Make sure you are testing the correct URL and that the server is properly responding to all requests. Detailed Error: {errorDetails}",
     "description": "Error message explaining that Lighthouse could not load the requested URL and the steps that might be taken to fix the unreliability."
   },
   "lighthouse-core/lib/lh-error.js | pageLoadFailedWithStatusCode": {
-    "message": "Lighthouse was unable to reliably load the page you requested. Make sure you are testing the correct URL and that the server is properly responding to all requests.  Status Code: {substitute}",
+    "message": "Lighthouse was unable to reliably load the page you requested. Make sure you are testing the correct URL and that the server is properly responding to all requests.  Status Code: {statusCode}",
     "description": "Error message explaining that Lighthouse could not load the requested URL and the steps that might be taken to fix the unreliability."
   },
   "lighthouse-core/lib/lh-error.js | pageLoadTookTooLong": {
@@ -468,7 +468,7 @@
     "description": "Error message explaining that the page loaded too slowly to perform a Lighthouse run."
   },
   "lighthouse-core/lib/lh-error.js | protocolTimeout": {
-    "message": "Waiting for DevTools protocol response has exceeded the allotted time. Method: {substitute}",
+    "message": "Waiting for DevTools protocol response has exceeded the allotted time. Method: {protocolMethod}",
     "description": "Error message explaining that the Chrome Devtools protocol has exceeded the maximum timeout allowed."
   },
   "lighthouse-core/lib/lh-error.js | requestContentTimeout": {
