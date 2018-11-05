@@ -287,11 +287,10 @@ class Driver {
     }
     return new Promise(async (resolve, reject) => {
       const asyncTimeout = setTimeout((_ => {
-        const errorDef = {
+        const err = new LHError({
           ...LHError.errors.PROTOCOL_TIMEOUT,
           protocolMethod: `${method}`,
-        };
-        const err = new LHError(errorDef);
+        });
         reject(err);
       }), timeout);
       try {
