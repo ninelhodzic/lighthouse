@@ -158,7 +158,7 @@ class Runner {
       return {lhr, artifacts, report};
     } catch (err) {
       // i18n error strings
-      i18n.getFormatted(err.message, settings.locale);
+      err.friendlyMessage = i18n.getFormatted(err.friendlyMessage, settings.locale);
       await Sentry.captureException(err, {level: 'fatal'});
       throw err;
     }
@@ -195,7 +195,6 @@ class Runner {
     if (!runnerOpts.config.passes) {
       throw new Error('No browser artifacts are either provided or requested.');
     }
-
     const driver = runnerOpts.driverMock || new Driver(connection);
     const gatherOpts = {
       driver,

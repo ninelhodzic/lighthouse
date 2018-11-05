@@ -609,6 +609,27 @@ describe('Runner', () => {
     assert.ok(lhr.runtimeError.message.includes(NO_FCP.message));
   });
 
+  it('internationalized thrown errors from driver', async () => {
+    const erroringDriver = {...driverMock, connect:
+      function errorConnect() {
+        const err = new LHError({
+          ...LHError.errors.PROTOCOL_TIMEOUT,
+          protocolMethod: 'Method.Failure',
+        });
+        return Promise.reject(err);
+      },
+    };
+
+    try {
+      await Runner.run(null, {url: 'https://example.com/', driverMock: erroringDriver, config: new Config()});
+      assert.fail('should have thrown');
+    } catch (err) {
+      assert.equal(err.code, LHError.errors.PROTOCOL_TIMEOUT.code);
+      assert.ok(/^Waiting for DevTools protocol.*Method: Method.Failure/.test(err.friendlyMessage),
+        'should have prevented run');
+    }
+  });
+
   it('can handle array of outputs', async () => {
     const url = 'https://example.com';
     const config = new Config({
