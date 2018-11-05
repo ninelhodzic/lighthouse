@@ -1063,7 +1063,7 @@ describe('GatherRunner', function() {
       }).then(artifacts => {
         assert.equal(artifacts.LighthouseRunWarnings.length, 1);
         expect(artifacts.LighthouseRunWarnings[0])
-        .toBeDisplayString(/^Lighthouse was unable to.*Detailed Error: net::ERR_NAME_NOT_RESOLVED./);
+          .toBeDisplayString(/^Lighthouse was.*Error: net::ERR_NAME_NOT_RESOLVED./);
       });
     });
 
