@@ -71,10 +71,7 @@ class GatherRunner {
    * @return {Promise<void>}
    */
   static async loadBlank(driver, url = constants.defaultPassConfig.blankPage) {
-    const status = {msg: 'Resetting state with about:blank', id: 'lh:gather:loadBlank'};
-    log.time(status);
     await driver.gotoURL(url, {waitForNavigated: true});
-    log.timeEnd(status);
   }
 
   /**
@@ -100,8 +97,6 @@ class GatherRunner {
    * @return {Promise<void>}
    */
   static async setupDriver(driver, options) {
-    const status = {msg: 'Initializing…', id: 'lh:gather:setupDriver'};
-    log.time(status);
     const resetStorage = !options.settings.disableStorageReset;
     await driver.assertNoSameOriginServiceWorkerClients(options.requestedUrl);
     await driver.beginEmulation(options.settings);
@@ -111,7 +106,6 @@ class GatherRunner {
     await driver.dismissJavaScriptDialogs();
     await driver.listenForSecurityStateChanges();
     if (resetStorage) await driver.clearDataForOrigin(options.requestedUrl);
-    log.timeEnd(status);
   }
 
   /**
@@ -119,9 +113,6 @@ class GatherRunner {
    * @return {Promise<void>}
    */
   static async disposeDriver(driver) {
-    const status = {msg: 'Disconnecting from browser...', id: 'lh:gather:disconnect'};
-
-    log.time(status);
     try {
       await driver.disconnect();
     } catch (err) {
@@ -131,7 +122,6 @@ class GatherRunner {
         log.error('GatherRunner disconnect', err.message);
       }
     }
-    log.timeEnd(status);
   }
 
   /**
@@ -186,8 +176,6 @@ class GatherRunner {
    * @return {Promise<void>}
    */
   static async beforePass(passContext, gathererResults) {
-    const bpStatus = {msg: `Running beforePass methods`, id: `lh:gather:beforePass`};
-    log.time(bpStatus, 'verbose');
     const blockedUrls = (passContext.passConfig.blockedUrlPatterns || [])
       .concat(passContext.settings.blockedUrlPatterns || []);
 
@@ -211,7 +199,6 @@ class GatherRunner {
       await artifactPromise.catch(() => {});
       log.timeEnd(status);
     }
-    log.timeEnd(bpStatus);
   }
 
   /**
@@ -493,5 +480,25 @@ class GatherRunner {
     }
   }
 }
+
+log.timeDecorateClass(GatherRunner, {
+  loadBlank: {
+    msg: 'Resetting state with about:blank',
+    id: 'lh:gather:loadBlank',
+  },
+  setupDriver: {
+    msg: 'Initializing…',
+    id: 'lh:gather:setupDriver',
+  },
+  disposeDriver: {
+    msg: 'Disconnecting from browser...',
+    id: 'lh:gather:disconnect',
+  },
+  beforePass: {
+    msg: 'Running beforePass methods',
+    id: 'lh:gather:beforePass',
+    timeBeginLogLevel: 'verbose',
+  },
+});
 
 module.exports = GatherRunner;

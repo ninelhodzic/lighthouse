@@ -60,17 +60,36 @@ class ComputedArtifact {
       return computed;
     }
 
-    const status = {msg: `Computing artifact: ${this.name}`, id: `lh:computed:${this.name}`};
-    log.time(status, 'verbose');
     // Need to cast since `this.compute_(...)` returns the concrete return type
     // of the base class's compute_, not the called derived class's.
     const artifactPromise = /** @type {ReturnType<this['compute_']>} */ (
-      this.compute_(requiredArtifacts, this._allComputedArtifacts));
+      this.makeRequest(requiredArtifacts));
     this._cache.set(requiredArtifacts, artifactPromise);
-
-    artifactPromise.then(() => log.timeEnd(status));
     return artifactPromise;
   }
+
+  /**
+   * Request a computed artifact, caching the result on the input artifact.
+   * Types of `requiredArtifacts` and the return value are derived from the
+   * `compute_` method on classes derived from ComputedArtifact.
+   * @param {FirstParamType<this['compute_']>} requiredArtifacts
+   * @return {Promise<ReturnType<this['compute_']>>}
+   */
+  makeRequest(requiredArtifacts) {
+    return this.compute_(requiredArtifacts, this._allComputedArtifacts);
+  }
 }
+
+log.timeDecorateClass(ComputedArtifact.prototype, {
+  makeRequest: {
+    msg: function() {
+      return `Computing artifact: ${this.name}`;
+    },
+    id: function() {
+      return `lh:computed:${this.name}`;
+    },
+    timeBeginLogLevel: 'verbose',
+  },
+});
 
 module.exports = ComputedArtifact;

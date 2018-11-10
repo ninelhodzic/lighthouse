@@ -128,6 +128,59 @@ class Log {
     marky.stop(id);
   }
 
+  /* eslint-disable no-invalid-this */
+  static timeDecorate(originalFn, opts) {
+    return function(...args) {
+      const timeStartLogLevel = opts.timeStartLogLevel || 'log';
+      const timeEndLogLevel = opts.timeStartLogLevel || 'verbose';
+
+      let msg;
+      if (typeof opts.msg === 'string') {
+        msg = opts.msg;
+      } else if (typeof opts.msg === 'function') {
+        msg = opts.msg.bind(this)(...args);
+      }
+      if (!msg) {
+        throw new Error('expected msg');
+      }
+
+      let id;
+      if (typeof opts.id === 'string') {
+        id = opts.id;
+      } else if (typeof opts.id === 'function') {
+        id = opts.id.bind(this)(...args);
+      }
+      if (!id) {
+        throw new Error('expected id');
+      }
+
+      const status = {msg, id};
+      Log.time(status, timeStartLogLevel);
+      const result = originalFn.bind(this)(...args);
+      if (result && typeof result.then === 'function') {
+        return result.then(value => {
+          Log.timeEnd(status, timeEndLogLevel);
+          return value;
+        });
+      } else {
+        Log.timeEnd(status, timeEndLogLevel);
+        return result;
+      }
+    };
+  }
+  /* eslint-enable no-invalid-this */
+
+  static timeDecorateClass(klass, methods) {
+    for (const [method, opts] of Object.entries(methods)) {
+      if (!opts.id) {
+        const className = (typeof klass === 'function' ? klass : klass.constructor).name;
+        opts.id = `lh:${className}:${method}`;
+      }
+      const original = klass[method];
+      klass[method] = Log.timeDecorate(original, opts);
+    }
+  }
+
   static log(title, ...args) {
     Log.events.issueStatus(title, args);
     return Log._logToStdErr(title, args);

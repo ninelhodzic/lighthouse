@@ -136,13 +136,10 @@ class Driver {
    * @return {Promise<LH.Crdp.Browser.GetVersionResponse & {milestone: number}>}
    */
   async getBrowserVersion() {
-    const status = {msg: 'Getting browser version', id: 'lh:gather:getVersion'};
-    log.time(status, 'verbose');
     const version = await this.sendCommand('Browser.getVersion');
     const match = version.product.match(/\/(\d+)/); // eg 'Chrome/71.0.3577.0'
     const milestone = match ? parseInt(match[1]) : 0;
-    log.timeEnd(status);
-    return Object.assign(version, {milestone});
+    return {...version, milestone};
   }
 
   /**
@@ -150,21 +147,14 @@ class Driver {
    * @return {Promise<number>}
    */
   async getBenchmarkIndex() {
-    const status = {msg: 'Benchmarking machine', id: 'lh:gather:getBenchmarkIndex'};
-    log.time(status);
-    const indexVal = await this.evaluateAsync(`(${pageFunctions.ultradumbBenchmarkString})()`);
-    log.timeEnd(status);
-    return indexVal;
+    return this.evaluateAsync(`(${pageFunctions.ultradumbBenchmarkString})()`);
   }
 
   /**
    * @return {Promise<void>}
    */
   async connect() {
-    const status = {msg: 'Connecting to browser', id: 'lh:init:connect'};
-    log.time(status);
-    await this._connection.connect();
-    log.timeEnd(status);
+    return this._connection.connect();
   }
 
   /**
@@ -1277,5 +1267,20 @@ class Driver {
     await this.sendCommand('Page.enable');
   }
 }
+
+log.timeDecorateClass(Driver.prototype, {
+  getBenchmarkIndex: {
+    msg: 'Benchmarking machine',
+    id: 'lh:gather:getBenchmarkIndex',
+  },
+  getBrowserVersion: {
+    msg: 'Getting browser version',
+    id: 'lh:gather:getVersion',
+  },
+  connect: {
+    msg: 'Connecting to browser',
+    id: 'lh:init:connect',
+  },
+});
 
 module.exports = Driver;

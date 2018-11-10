@@ -16,8 +16,25 @@ declare module 'lighthouse-logger' {
   export function warn(title: string, ...args: any[]): void;
   export function error(title: string, ...args: any[]): void;
   export function verbose(title: string, ...args: any[]): void;
+  export function isVerbose(): boolean;
   export function time(status: Status, level?: string): void;
   export function timeEnd(status: Status, level?: string): void;
+
+  type ArgumentTypes<F extends Function> = F extends (...args: infer A) => any ? A : never;
+  type IsFunction<T> = T extends Function ? T : never;
+  interface TimeDecorateOpts<Class, T extends Function> {
+    msg: string | ((this: Class, ...args: ArgumentTypes<T>) => string);
+    id?: string | ((this: Class, ...args: ArgumentTypes<T>) => string);
+    timeBeginLogLevel?: string;
+    timeEndLogLevel?: string;
+  }
+
+  export function timeDecorate<Fn extends Function>(fn: Fn, opts: TimeDecorateOpts<Fn['prototype'], Fn>): Fn;
+  export function timeDecorateClass<Class, Prop extends keyof Class>(
+    klass: Class,
+    methods: {[key in Prop]: TimeDecorateOpts<Class, IsFunction<Class[key]>>},
+  ): void;
+
   export function reset(): string;
   /** Retrieves and clears all stored time entries */
   export function takeTimeEntries(): PerformanceEntry[];

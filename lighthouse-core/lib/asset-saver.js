@@ -79,8 +79,6 @@ async function loadArtifacts(basePath) {
  * @return {Promise<void>}
  */
 async function saveArtifacts(artifacts, basePath) {
-  const status = {msg: 'Saving artifacts', id: 'lh:assetSaver:saveArtifacts'};
-  log.time(status);
   mkdirp.sync(basePath);
   rimraf.sync(`${basePath}/*${traceSuffix}`);
   rimraf.sync(`${basePath}/${artifactsFilename}`);
@@ -102,7 +100,6 @@ async function saveArtifacts(artifacts, basePath) {
   const restArtifactsString = JSON.stringify(restArtifacts, null, 2);
   fs.writeFileSync(`${basePath}/${artifactsFilename}`, restArtifactsString, 'utf8');
   log.log('Artifacts saved to disk in folder:', basePath);
-  log.timeEnd(status);
 }
 
 /**
@@ -273,7 +270,10 @@ async function logAssets(artifacts, audits) {
 }
 
 module.exports = {
-  saveArtifacts,
+  saveArtifacts: log.timeDecorate(saveArtifacts, {
+    msg: 'Saving artifacts',
+    id: 'lh:assetSaver:saveArtifacts',
+  }),
   loadArtifacts,
   saveAssets,
   prepareAssets,

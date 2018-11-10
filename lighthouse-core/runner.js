@@ -213,9 +213,6 @@ class Runner {
    * @return {Promise<Array<LH.Audit.Result>>}
    */
   static async _runAudits(settings, audits, artifacts, runWarnings) {
-    const status = {msg: 'Analyzing and running audits...', id: 'lh:runner:auditing'};
-    log.time(status);
-
     if (artifacts.settings) {
       const overrides = {
         locale: undefined,
@@ -246,7 +243,6 @@ class Runner {
       auditResults.push(auditResult);
     }
 
-    log.timeEnd(status);
     return auditResults;
   }
 
@@ -261,12 +257,6 @@ class Runner {
    */
   static async _runAudit(auditDefn, artifacts, sharedAuditContext) {
     const audit = auditDefn.implementation;
-    const status = {
-      msg: `Evaluating: ${i18n.getFormatted(audit.meta.title, 'en-US')}`,
-      id: `lh:audit:${audit.meta.id}`,
-    };
-    log.time(status);
-
     let auditResult;
     try {
       // Return an early error if an artifact required for the audit is missing or an error.
@@ -326,7 +316,6 @@ class Runner {
       auditResult = Audit.generateErrorAuditResult(audit, errorMessage);
     }
 
-    log.timeEnd(status);
     return auditResult;
   }
 
@@ -461,5 +450,17 @@ class Runner {
     return path.join(process.cwd(), 'latest-run');
   }
 }
+
+log.timeDecorateClass(Runner, {
+  _runAudit: {
+    msg: auditDefn =>
+      `Evaluating: ${i18n.getFormatted(auditDefn.implementation.meta.title, 'en-US')}`,
+    id: auditDefn => `lh:audit:${auditDefn.implementation.meta.id}`,
+  },
+  _runAudits: {
+    msg: 'Analyzing and running audits...',
+    id: 'lh:runner:auditing',
+  },
+});
 
 module.exports = Runner;
