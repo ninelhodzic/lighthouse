@@ -130,7 +130,7 @@ class Log {
 
   /* eslint-disable no-invalid-this */
   static timeDecorate(originalFn, opts) {
-    return function(...args) {
+    return function timeDecoratedFn(...args) {
       const timeStartLogLevel = opts.timeStartLogLevel || 'log';
       const timeEndLogLevel = opts.timeStartLogLevel || 'verbose';
 
@@ -149,6 +149,8 @@ class Log {
         id = opts.id;
       } else if (typeof opts.id === 'function') {
         id = opts.id.bind(this)(...args);
+      } else {
+        id = `lh:${originalFn.name}`;
       }
       if (!id) {
         throw new Error('expected id');
@@ -156,11 +158,22 @@ class Log {
 
       const status = {msg, id};
       Log.time(status, timeStartLogLevel);
-      const result = originalFn.bind(this)(...args);
+
+      let result;
+      try {
+        result = originalFn.bind(this)(...args);
+      } catch (err) {
+        err.stack = err.stack.replace(/.* at timeDecoratedFn .*\n/g, '');
+        throw err;
+      }
+
       if (result && typeof result.then === 'function') {
         return result.then(value => {
           Log.timeEnd(status, timeEndLogLevel);
           return value;
+        }).catch(err => {
+          err.stack = err.stack.replace(/.* at timeDecoratedFn .*\n/, '');
+          throw err;
         });
       } else {
         Log.timeEnd(status, timeEndLogLevel);

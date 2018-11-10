@@ -77,6 +77,38 @@ describe('Log.timeDecorate', function() {
     decoratedFn('it', 'works');
     assert.equal(log.takeTimeEntries()[0].name, 'id:it:works');
   });
+
+  it('scrubs decorator from trace', () => {
+    const fn = () => {
+      throw new Error('test error');
+    };
+    const decoratedFn = log.timeDecorate(fn, {
+      msg: 'test',
+    });
+    let sawError = false;
+    try {
+      decoratedFn();
+    } catch (err) {
+      assert.ok(!err.stack.includes('timeDecoratedFn'));
+      sawError = true;
+    }
+    assert.ok(sawError);
+  });
+
+  it('scrubs decorator from trace, async', async () => {
+    const fn = async () => {
+      throw new Error('test error');
+    };
+    const decoratedFn = log.timeDecorate(fn, {
+      msg: 'test',
+    });
+    let sawError = false;
+    await decoratedFn().catch(err => {
+      assert.ok(!err.stack.includes('timeDecoratedFn'));
+      sawError = true;
+    });
+    assert.ok(sawError);
+  });
 });
 
 describe('Log.timeDecorateClass', function() {
