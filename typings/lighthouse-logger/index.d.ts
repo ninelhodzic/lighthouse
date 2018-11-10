@@ -29,14 +29,23 @@ declare module 'lighthouse-logger' {
     timeEndLogLevel?: string;
   }
 
+  /**
+   * Decorates a function, calling time/timeEnd before/after calling the original function.
+   */
   export function timeDecorate<Fn extends Function>(fn: Fn, opts: TimeDecorateOpts<Fn['prototype'], Fn>): Fn;
+  
+  /**
+   * Decorates (like timeDecorate) specified methods of a class.
+   * If decorating instance methods, use the class's prototype.
+   * If decorating static methods, use the class directly.
+   */
   export function timeDecorateClass<Class, Prop extends keyof Class>(
     klass: Class,
     methods: {[key in Prop]: TimeDecorateOpts<Class, IsFunction<Class[key]>>},
   ): void;
 
   export function reset(): string;
-  /** Retrieves and clears all stored time entries */
+  /** Retrieves and clears all stored time entries. */
   export function takeTimeEntries(): PerformanceEntry[];
   export function getTimeEntries(): PerformanceEntry[];
   export var events: import('events').EventEmitter;
