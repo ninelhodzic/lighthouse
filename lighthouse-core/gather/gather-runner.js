@@ -5,7 +5,7 @@
  */
 'use strict';
 
-const log = require('lighthouse-logger');
+const log = require('../lib/log');
 const LHError = require('../lib/lh-error');
 const URL = require('../lib/url-shim');
 const NetworkRecorder = require('../lib/network-recorder.js');
@@ -497,7 +497,7 @@ log.timeDecorateClass(GatherRunner, {
   beforePass: {
     msg: 'Running beforePass methods',
     id: 'lh:gather:beforePass',
-    timeBeginLogLevel: 'verbose',
+    timeStartLogLevel: 'verbose',
   },
 });
 

@@ -6,7 +6,7 @@
 'use strict';
 
 const ArbitraryEqualityMap = require('../../lib/arbitrary-equality-map');
-const log = require('lighthouse-logger');
+const log = require('../../lib/log');
 
 class ComputedArtifact {
   /**
@@ -88,7 +88,7 @@ log.timeDecorateClass(ComputedArtifact.prototype, {
     id: function() {
       return `lh:computed:${this.name}`;
     },
-    timeBeginLogLevel: 'verbose',
+    timeStartLogLevel: 'verbose',
   },
 });
 

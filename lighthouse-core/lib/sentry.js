@@ -5,7 +5,7 @@
  */
 'use strict';
 
-const log = require('lighthouse-logger');
+const log = require('../lib/log');
 
 /** @typedef {import('raven').CaptureOptions} CaptureOptions */
 /** @typedef {import('raven').ConstructorOptions} ConstructorOptions */

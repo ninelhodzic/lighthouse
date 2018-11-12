@@ -13,8 +13,7 @@ const NetworkRequest = require('../lib/network-request');
 const EventEmitter = require('events').EventEmitter;
 const URL = require('../lib/url-shim');
 const constants = require('../config/constants');
-
-const log = require('lighthouse-logger');
+const log = require('../lib/log');
 const DevtoolsLog = require('./devtools-log');
 
 const pageFunctions = require('../lib/page-functions.js');

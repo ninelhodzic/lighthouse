@@ -7,7 +7,7 @@
 
 const path = require('path');
 const isDeepEqual = require('lodash.isequal');
-const log = require('lighthouse-logger');
+const log = require('../log');
 const MessageFormat = require('intl-messageformat').default;
 const MessageParser = require('intl-messageformat-parser');
 const lookupClosestLocale = require('lookup-closest-locale');

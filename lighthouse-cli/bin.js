@@ -27,7 +27,7 @@ const getFlags = require('./cli-flags.js').getFlags;
 const runLighthouse = require('./run').runLighthouse;
 const generateConfig = require('../lighthouse-core/index.js').generateConfig;
 
-const log = require('lighthouse-logger');
+const log = require('../lighthouse-core/lib/log');
 const pkg = require('../package.json');
 const Sentry = require('../lighthouse-core/lib/sentry');
 

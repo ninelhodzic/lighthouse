@@ -8,7 +8,7 @@
 const Configstore = require('configstore');
 const inquirer = require('inquirer');
 
-const log = require('lighthouse-logger');
+const log = require('../lighthouse-core/lib/log');
 
 const MAXIMUM_WAIT_TIME = 20 * 1000;
 

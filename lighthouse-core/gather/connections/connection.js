@@ -6,7 +6,7 @@
 'use strict';
 
 const EventEmitter = require('events').EventEmitter;
-const log = require('lighthouse-logger');
+const log = require('../../lib/log');
 const LHError = require('../../lib/lh-error');
 
 // TODO(bckenny): CommandCallback properties should be tied by command type after

@@ -17,7 +17,7 @@
  */
 
 const makeComputedArtifact = require('./new-computed-artifact.js');
-const log = require('lighthouse-logger');
+const log = require('../../lib/log');
 const TracingProcessor = require('../../lib/traces/tracing-processor');
 const LHError = require('../../lib/lh-error');
 const Sentry = require('../../lib/sentry');

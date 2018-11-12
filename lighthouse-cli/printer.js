@@ -6,7 +6,7 @@
 'use strict';
 
 const fs = require('fs');
-const log = require('lighthouse-logger');
+const log = require('../lighthouse-core/lib/log');
 
 /**
  * An enumeration of acceptable output modes:

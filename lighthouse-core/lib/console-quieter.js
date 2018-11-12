@@ -7,9 +7,9 @@
 
 /* eslint-disable no-console */
 
-const log = require('lighthouse-logger');
+const log = require('../lib/log');
 
-/** @type {Array<{type: 'log'|'warn'|'error', args: any[], prefix: string}>} */
+/** @type {Array<{type: 'log'|'warn'|'error', args: [any, ...any[]], prefix: string}>} */
 let _logs = [];
 
 class ConsoleQuieter {
@@ -17,15 +17,15 @@ class ConsoleQuieter {
   static mute(opts) {
     _logs = _logs || [];
 
-    /** @param {any[]} args */
+    /** @param {[any, ...any[]]} args */
     console.log = function(...args) {
       _logs.push({type: 'log', args, prefix: opts.prefix});
     };
-    /** @param {any[]} args */
+    /** @param {[any, ...any[]]} args */
     console.warn = function(...args) {
       _logs.push({type: 'warn', args, prefix: opts.prefix});
     };
-    /** @param {any[]} args */
+    /** @param {[any, ...any[]]} args */
     console.error = function(...args) {
       _logs.push({type: 'error', args, prefix: opts.prefix});
     };

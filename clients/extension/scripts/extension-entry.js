@@ -11,7 +11,7 @@ const defaultConfig = require('../../../lighthouse-core/config/default-config.js
 const i18n = require('../../../lighthouse-core/lib/i18n/i18n.js');
 
 const ExtensionProtocol = require('../../../lighthouse-core/gather/connections/extension');
-const log = require('lighthouse-logger');
+const log = require('../../../lighthouse-core/lib/log');
 
 /** @typedef {import('../../../lighthouse-core/gather/connections/connection.js')} Connection */
 

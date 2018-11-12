@@ -7,7 +7,7 @@
 
 const NetworkRequest = require('./network-request');
 const EventEmitter = require('events').EventEmitter;
-const log = require('lighthouse-logger');
+const log = require('../lib/log');
 
 const IGNORED_NETWORK_SCHEMES = ['data', 'ws'];
 

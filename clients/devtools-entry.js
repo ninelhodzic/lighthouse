@@ -7,7 +7,7 @@
 
 const lighthouse = require('../lighthouse-core/index.js');
 const RawProtocol = require('../lighthouse-core/gather/connections/raw.js');
-const log = require('lighthouse-logger');
+const log = require('../lighthouse-core/lib/log');
 
 /** @typedef {import('../lighthouse-core/gather/connections/connection.js')} Connection */
 

@@ -12,7 +12,7 @@ const constants = require('./constants.js');
 const i18n = require('./../lib/i18n/i18n.js');
 
 const isDeepEqual = require('lodash.isequal');
-const log = require('lighthouse-logger');
+const log = require('../lib/log');
 const path = require('path');
 const Audit = require('../audits/audit.js');
 const Runner = require('../runner.js');
