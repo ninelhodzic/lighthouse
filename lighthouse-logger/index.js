@@ -22,10 +22,10 @@ const EventEmitter = require('events').EventEmitter;
 
 /**
  * @template Class
- * @template {Function} F
+ * @template {*[]} Args
  * @typedef {{
- *  msg: string | ((this: Class, ...args: ArgumentTypes<F>) => string),
- *  id?: string | ((this: Class, ...args: ArgumentTypes<F>) => string),
+ *  msg: string | ((this: Class, ...args: Args) => string),
+ *  id?: string | ((this: Class, ...args: Args) => string),
  *  timeStartLogLevel?: LogAction,
  *  timeEndLogLevel?: LogAction,
  * }} TimeDecorateOpts
@@ -195,14 +195,15 @@ class Log {
   /* eslint-disable no-invalid-this */
   /**
    * Decorates a function, calling time/timeEnd before/after calling the original function.
-   * @template {Function} F
-   * @param {F} originalFn
-   * @param {TimeDecorateOpts<F['prototype'], F>} opts
-   * @return {(this: any, ...args: ArgumentTypes<F>) => any}
+   * @template T, R
+   * @template {*[]} Args
+   * @param {(this: T, ...args: Args) => R} originalFn
+   * @param {TimeDecorateOpts<T, Args>} opts
+   * @return {(this: T, ...args: Args) => R}
    */
   static timeDecorate(originalFn, opts) {
     /**
-     * @type {(this: any, ...args: ArgumentTypes<F>) => any}
+     * @type {(this: T, ...args: Args) => R}
      */
     const fn = function timeDecoratedFn(...args) {
       const timeStartLogLevel = opts.timeStartLogLevel || 'log';
@@ -265,7 +266,7 @@ class Log {
    * @template {Object|Function} Class
    * @template {keyof Class} Prop
    * @param {Class} klass
-   * @param {{[key in Prop]: TimeDecorateOpts<Class, IsFunction<Class[key]>>}} methods
+   * @param {{[key in Prop]: TimeDecorateOpts<Class, ArgumentTypes<IsFunction<Class[key]>>>}} methods
    */
   static timeDecorateClass(klass, methods) {
     for (const [method, opts] of Object.entries(methods)) {
@@ -273,7 +274,7 @@ class Log {
         const className = (typeof klass === 'function' ? klass : klass.constructor).name;
         opts.id = `lh:${className}:${method}`;
       }
-      /** @type {Function} */
+      /** @type {IsFunction<Class[typeof method]>} */
       const original = klass[method];
       klass[method] = Log.timeDecorate(original, opts);
     }
