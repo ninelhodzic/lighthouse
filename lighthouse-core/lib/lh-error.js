@@ -42,12 +42,6 @@ const str_ = i18n.createMessageInstanceIdFn(__filename, UIStrings);
  * @property {string} message
  * @property {RegExp} [pattern]
  * @property {boolean} [lhrRuntimeError] True if it should appear in the top-level LHR.runtimeError property.
- * ICU argument replacement properties
- * @property {string} [statusCode]
- * @property {string} [errorDetails]
- * @property {string} [securityMessages]
- * @property {string} [protocolMethod]
- *
  */
 
 class LighthouseError extends Error {
@@ -59,7 +53,7 @@ class LighthouseError extends Error {
     super(errorDefinition.code);
     this.name = 'LHError';
     this.code = errorDefinition.code;
-    this.friendlyMessage = str_(errorDefinition.message, errorDefinition);
+    this.friendlyMessage = str_(errorDefinition.message, properties);
     this.lhrRuntimeError = !!errorDefinition.lhrRuntimeError;
     if (properties) Object.assign(this, properties);
 
@@ -165,26 +159,29 @@ const ERRORS = {
     message: UIStrings.pageLoadFailed,
     lhrRuntimeError: true,
   },
-  /* Used when DevTools reports loading failed. Usually an internal (Chrome) issue. */
+  /* Used when DevTools reports loading failed. Usually an internal (Chrome) issue.
+   * Requries an additional `errorDetails` field for translation.
+   */
   FAILED_DOCUMENT_REQUEST: {
     code: 'FAILED_DOCUMENT_REQUEST',
     message: UIStrings.pageLoadFailedWithDetails,
     lhrRuntimeError: true,
-    errorDetails: 'No Failure Description Loaded.',
   },
-  /* Used when status code is 4xx or 5xx. */
+  /* Used when status code is 4xx or 5xx.
+   * Requires an additional `statusCode` field for translation.
+   */
   ERRORED_DOCUMENT_REQUEST: {
     code: 'ERRORED_DOCUMENT_REQUEST',
     message: UIStrings.pageLoadFailedWithStatusCode,
     lhrRuntimeError: true,
-    statusCode: 'No Error Code Loaded.',
   },
-  /* Used when security error prevents page load. */
+  /* Used when security error prevents page load.
+   * Requires an additional `securityMessages` field for translation.
+   */
   INSECURE_DOCUMENT_REQUEST: {
     code: 'INSECURE_DOCUMENT_REQUEST',
     message: UIStrings.pageLoadFailedInsecure,
     lhrRuntimeError: true,
-    securityMessages: 'No Security Descriptions Loaded.',
   },
 
   // Protocol internal failures
@@ -213,12 +210,13 @@ const ERRORS = {
     message: UIStrings.urlInvalid,
   },
 
-  // Protocol timeout failures
+  /* Protocol timeout failures
+   * Requires an additional `icuProtocolMethod` field for translation.
+   */
   PROTOCOL_TIMEOUT: {
     code: 'PROTOCOL_TIMEOUT',
     message: UIStrings.protocolTimeout,
     lhrRuntimeError: true,
-    protocolMethod: 'No Method Loaded.',
   },
 
   // Hey! When adding a new error type, update lighthouse-result.proto too.

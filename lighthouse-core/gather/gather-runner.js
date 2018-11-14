@@ -147,22 +147,23 @@ class GatherRunner {
     });
 
     let errorDef;
+    let props;
     if (!mainRecord) {
       errorDef = LHError.errors.NO_DOCUMENT_REQUEST;
     } else if (mainRecord.failed) {
-      errorDef = {
-        ...LHError.errors.FAILED_DOCUMENT_REQUEST,
+      errorDef = LHError.errors.FAILED_DOCUMENT_REQUEST;
+      props = {
         errorDetails: `${mainRecord.localizedFailDescription}.`,
       };
     } else if (mainRecord.hasErrorStatusCode()) {
-      errorDef = {
-        ...LHError.errors.ERRORED_DOCUMENT_REQUEST,
+      errorDef = LHError.errors.ERRORED_DOCUMENT_REQUEST;
+      props = {
         statusCode: `${mainRecord.statusCode}.`,
       };
     }
 
     if (errorDef) {
-      return new LHError(errorDef);
+      return new LHError(errorDef, props);
     }
   }
 
@@ -176,11 +177,10 @@ class GatherRunner {
       const insecureDescriptions = explanations
         .filter(exp => exp.securityState === 'insecure')
         .map(exp => exp.description);
-      const errorDef = {
-        ...LHError.errors.INSECURE_DOCUMENT_REQUEST,
-        'securityMessages': `${insecureDescriptions.join(' ')}`,
-      };
-      throw new LHError(errorDef);
+      throw new LHError(
+        LHError.errors.INSECURE_DOCUMENT_REQUEST,
+        {securityMessages: `${insecureDescriptions.join(' ')}`}
+      );
     }
   }
 

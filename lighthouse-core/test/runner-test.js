@@ -609,14 +609,14 @@ describe('Runner', () => {
     assert.ok(lhr.runtimeError.message.includes(NO_FCP.message));
   });
 
-  it('internationalized thrown errors from driver', async () => {
-    const erroringDriver = {...driverMock, connect:
-      function errorConnect() {
-        const err = new LHError({
-          ...LHError.errors.PROTOCOL_TIMEOUT,
-          protocolMethod: 'Method.Failure',
-        });
-        return Promise.reject(err);
+  it('localized errors thrown from driver', async () => {
+    const erroringDriver = {...driverMock,
+      async connect() {
+        const err = new LHError(
+          LHError.errors.PROTOCOL_TIMEOUT,
+          {protocolMethod: 'Method.Failure'}
+        );
+        throw err;
       },
     };
 
