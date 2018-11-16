@@ -69,9 +69,9 @@ class LanternInteractive extends LanternMetric {
    */
   static getEstimateFromSimulation(simulationResult, extras) {
     const lastTaskAt = LanternInteractive.getLastLongTaskEndTime(simulationResult.nodeTimings);
-    const minimumTime = extras.optimistic
-      ? extras.fmpResult.optimisticEstimate.timeInMs
-      : extras.fmpResult.pessimisticEstimate.timeInMs;
+    const minimumTime = extras.optimistic ?
+      extras.fmpResult.optimisticEstimate.timeInMs :
+      extras.fmpResult.pessimisticEstimate.timeInMs;
     return {
       timeInMs: Math.max(minimumTime, lastTaskAt),
       nodeTimings: simulationResult.nodeTimings,

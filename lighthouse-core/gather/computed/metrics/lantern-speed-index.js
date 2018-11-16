@@ -51,9 +51,9 @@ class LanternSpeedIndex extends LanternMetric {
    */
   static getEstimateFromSimulation(simulationResult, extras) {
     const fcpTimeInMs = extras.fcpResult.pessimisticEstimate.timeInMs;
-    const estimate = extras.optimistic
-      ? extras.speedline.speedIndex
-      : LanternSpeedIndex.computeLayoutBasedSpeedIndex(simulationResult.nodeTimings, fcpTimeInMs);
+    const estimate = extras.optimistic ?
+      extras.speedline.speedIndex :
+      LanternSpeedIndex.computeLayoutBasedSpeedIndex(simulationResult.nodeTimings, fcpTimeInMs);
     return {
       timeInMs: estimate,
       nodeTimings: simulationResult.nodeTimings,

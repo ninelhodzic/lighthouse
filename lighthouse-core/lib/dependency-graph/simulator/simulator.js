@@ -257,9 +257,9 @@ class Simulator {
    */
   _estimateCPUTimeRemaining(cpuNode) {
     const timingData = this._getTimingData(cpuNode);
-    const multiplier = cpuNode.didPerformLayout()
-      ? this._layoutTaskMultiplier
-      : this._cpuSlowdownMultiplier;
+    const multiplier = cpuNode.didPerformLayout() ?
+      this._layoutTaskMultiplier :
+      this._cpuSlowdownMultiplier;
     const totalDuration = Math.min(
       Math.round(cpuNode.event.dur / 1000 * multiplier),
       DEFAULT_MAXIMUM_CPU_TASK_DURATION
@@ -328,9 +328,9 @@ class Simulator {
     const isFinished = timingData.estimatedTimeElapsed === timePeriodLength;
 
     if (node.type === BaseNode.TYPES.CPU || node.fromDiskCache) {
-      return isFinished
-        ? this._markNodeAsComplete(node, totalElapsedTime)
-        : (timingData.timeElapsed += timePeriodLength);
+      return isFinished ?
+        this._markNodeAsComplete(node, totalElapsedTime) :
+        (timingData.timeElapsed += timePeriodLength);
     }
 
     if (node.type !== BaseNode.TYPES.NETWORK) throw new Error('Unsupported');

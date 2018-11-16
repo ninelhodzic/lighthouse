@@ -266,9 +266,9 @@ function findAndPrintWorst10Sites(metric, lanternMetrics) {
     .slice(0, 10)
     .forEach(entry => {
       console.log(
-        entry.actual < entry.expected
-          ? chalk.cyan('underestimated')
-          : chalk.yellow('overestimated'),
+        entry.actual < entry.expected ?
+          chalk.cyan('underestimated') :
+          chalk.yellow('overestimated'),
         entry.metric,
         chalk.gray('by'),
         Math.round(entry.diff),

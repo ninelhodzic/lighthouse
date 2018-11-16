@@ -28,9 +28,9 @@ class LanternFirstCPUIdle extends LanternInteractive {
    * @return {LH.Gatherer.Simulation.Result}
    */
   static getEstimateFromSimulation(simulation, extras) {
-    const fmpTimeInMs = extras.optimistic
-      ? extras.fmpResult.optimisticEstimate.timeInMs
-      : extras.fmpResult.pessimisticEstimate.timeInMs;
+    const fmpTimeInMs = extras.optimistic ?
+      extras.fmpResult.optimisticEstimate.timeInMs :
+      extras.fmpResult.pessimisticEstimate.timeInMs;
 
     return {
       timeInMs: LanternFirstCPUIdle.getFirstCPUIdleWindowStart(simulation.nodeTimings, fmpTimeInMs),

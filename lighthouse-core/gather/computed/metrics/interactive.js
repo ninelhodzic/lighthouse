@@ -134,9 +134,9 @@ class Interactive extends ComputedMetric {
     }
 
     throw new LHError(
-      cpuCandidate
-        ? LHError.errors.NO_TTI_NETWORK_IDLE_PERIOD
-        : LHError.errors.NO_TTI_CPU_IDLE_PERIOD
+      cpuCandidate ?
+        LHError.errors.NO_TTI_NETWORK_IDLE_PERIOD :
+        LHError.errors.NO_TTI_CPU_IDLE_PERIOD
     );
   }
 

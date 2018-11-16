@@ -29,10 +29,8 @@ class NoVulnerableLibrariesAudit extends Audit {
   static get meta() {
     return {
       id: 'no-vulnerable-libraries',
-      title: 'Avoids front-end JavaScript libraries'
-        + ' with known security vulnerabilities',
-      failureTitle: 'Includes front-end JavaScript libraries'
-        + ' with known security vulnerabilities',
+      title: 'Avoids front-end JavaScript libraries with known security vulnerabilities',
+      failureTitle: 'Includes front-end JavaScript libraries with known security vulnerabilities',
       description: 'Some third-party scripts may contain known security vulnerabilities ' +
         'that are easily identified and exploited by attackers. ' +
         '[Learn more](https://developers.google.com/web/tools/lighthouse/audits/vulnerabilities).',
